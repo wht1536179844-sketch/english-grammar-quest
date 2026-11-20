@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>英语语法闯关训练 · 从零到精通</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --card-2: #f1f5f9;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-soft: rgba(37, 99, 235, 0.1);
+      --primary-fg: #ffffff;
+      --ok: #10b981;
+      --ok-soft: rgba(16, 185, 129, 0.12);
+      --err: #ef4444;
+      --err-soft: rgba(239, 68, 68, 0.12);
+      --warn: #f59e0b;
+      --shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+      --radius: 16px;
+    }
+
+    html.dark {
+      --bg: #0b1120;
+      --card: #111827;
+      --card-2: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --border: #263244;
+      --primary: #3b82f6;
+      --primary-soft: rgba(59, 130, 246, 0.16);
+      --primary-fg: #ffffff;
+      --ok: #34d399;
+      --ok-soft: rgba(52, 211, 153, 0.16);
+      --err: #f87171;
+      --err-soft: rgba(248, 113, 113, 0.16);
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      padding-bottom: calc(78px + env(safe-area-inset-bottom));
+    }
+
+    button {
+      font-family: inherit;
+      color: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 12px 14px 20px;
+    }
+
+    /* 顶部栏 */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: var(--bg);
+      padding: 10px 14px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-btn {
+      min-height: 36px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* 进度卡 */
+    .hero-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .hero-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .progress-num {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--card-2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #10b981);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--card-2);
+      color: var(--muted);
+      border: 1px solid transparent;
+    }
+
+    .filter-chip.active {
+      background: var(--primary);
+      color: var(--primary-fg);
+    }
+
+    /* 世界卡片 */
+    .world-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .world-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .world-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .world-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .world-stat {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--card-2);
+      white-space: nowrap;
+    }
+
+    .stage-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 600px) {
+      .stage-list {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .stage-btn {
+      width: 100%;
+      text-align: left;
+      padding: 13px;
+      border-radius: 14px;
+      background: var(--card-2);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: transform 0.12s ease, border-color 0.15s ease;
+    }
+
+    .stage-btn:active {
+      transform: scale(0.985);
+    }
+
+    .stage-btn.done {
+      border-color: var(--ok);
+      background: var(--ok-soft);
+    }
+
+    .stage-meta {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stage-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .stage-video {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 240px;
+    }
+
+    .stage-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .stage-btn.done .stage-badge {
+      background: var(--ok);
+      color: #fff;
+      border-color: var(--ok);
+    }
+
+    /* 关卡详情页 */
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .section-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 15px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .formula-box {
+      background: var(--primary-soft);
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      margin: 12px 0;
+      word-break: break-word;
+    }
+
+    .point-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      font-size: 14px;
+    }
+
+    .point-list li {
+      margin-bottom: 6px;
+    }
+
+    .example-item {
+      background: var(--card-2);
+      border-radius: 12px;
+      padding: 11px 12px;
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .speak-btn {
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .quiz-card {
+      background: var(--card-2);
+      border-radius: 14px;
+      padding: 13px;
+      margin-top: 10px;
+    }
+
+    .quiz-q {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .quiz-opt {
+      width: 100%;
+      text-align: left;
+      min-height: 44px;
+      padding: 10px 12px;
+      margin-bottom: 7px;
+      border-radius: 11px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+    }
+
+    .quiz-opt.correct {
+      border-color: var(--ok);
+      background: var(--ok-soft);
+      color: var(--ok);
+      font-weight: 700;
+    }
+
+    .quiz-opt.wrong {
+      border-color: var(--err);
+      background: var(--err-soft);
+      color: var(--err);
+    }
+
+    .quiz-explain {
+      font-size: 12px;
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--card);
+    }
+
+    .nav-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      min-height: 46px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: var(--primary-fg);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 0 14px;
+    }
+
+    .btn-secondary {
+      min-height: 46px;
+      border-radius: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0 14px;
+    }
+
+    .btn-primary:disabled, .btn-secondary:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* 底部导航栏（手机单手友好） */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 30;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
+    }
+
+    .bottom-nav-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .nav-tab {
+      min-height: 48px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      gap: 2px;
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .tag-video {
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--card-2);
+      padding: 8px 10px;
+      border-radius: 10px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 顶部栏 -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand-title">英语语法闯关训练</div>
+        <div class="brand-sub">8 大世界 · 32 关从零到精通</div>
+      </div>
+      <div class="top-actions">
+        <button id="themeBtn" class="pill-btn" aria-label="切换主题">🌙 夜间</button>
+        <button id="resetBtn" class="pill-btn">重置</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Tab 1: 闯关地图 -->
+    <section id="viewMap">
+      <div class="hero-card">
+        <div class="hero-row">
+          <span id="rankBadge" class="rank-badge">🌱 语法新手</span>
+          <span id="progressText" class="progress-num">0 / 32 关 (0%)</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div class="filter-row">
+          <button class="filter-chip active" data-filter="all">全部关卡</button>
+          <button class="filter-chip" data-filter="todo">未通关</button>
+          <button class="filter-chip" data-filter="done">已通关</button>
+        </div>
+      </div>
+
+      <div id="worldsContainer"></div>
+    </section>
+
+    <!-- 关卡详情视图（点击任意关卡进入） -->
+    <section id="viewDetail" class="hidden"></section>
+
+    <!-- Tab 2: 随机刷题 / 错题巩固 -->
+    <section id="viewPractice" class="hidden"></section>
+
+    <!-- Tab 3: 万能公式速查 -->
+    <section id="viewCheat" class="hidden"></section>
+  </main>
+
+  <!-- 底部手机导航 -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="nav-tab active" data-tab="map">
+        <span style="font-size:17px">🗺️</span>
+        <span>闯关地图</span>
+      </button>
+      <button class="nav-tab" data-tab="practice">
+        <span style="font-size:17px">🎯</span>
+        <span>随机刷题</span>
+      </button>
+      <button class="nav-tab" data-tab="cheat">
+        <span style="font-size:17px">📖</span>
+        <span>公式速查</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    const WORLDS = [
+      {
+        id: "w1",
+        name: "World 1 · 新手村：句子最小积木",
+        subtitle: "代词、be动词、名词与五大基本句型",
+        stages: [
+          {
+            id: "1-1",
+            title: "人称代词与单三概念",
+            video: "第 1 集《你、我、他(包括单三讲解)》",
+            summary: "分清主格（作主语）与宾格（作宾语），彻底搞懂英语中最容易丢分的「第三人称单数」。",
+            formula: "主格 (I/you/he/she/it/we/they) + 动词 + 宾格 (me/you/him/her/it/us/them)",
+            points: [
+              "主格放在动词前面发动作：He likes me.",
+              "宾格放在动词或介词后面接动作：Look at him.",
+              "第三人称单数（单三）：非你非我且只有一个（he/she/it/Tom），一般现在时动词要加 -s/-es。"
+            ],
+            examples: [
+              { en: "She teaches us English.", zh: "她教我们英语。（She 主格，teaches 单三，us 宾格）" },
+              { en: "Listen to me, please.", zh: "请听我说。（介词 to 后用宾格 me）" }
+            ],
+            quiz: [
+              {
+                q: "选出正确句子：「他每天帮助我。」",
+                options: ["He help me every day.", "He helps I every day.", "He helps me every day.", "Him helps me every day."],
+                answer: 2,
+                explain: "He 是第三人称单数主格，动词 help 变 helps；动词后用宾格 me。"
+              },
+              {
+                q: "「我和他都是学生」英文主语部分应为：",
+                options: ["Me and him", "He and I", "Him and I", "I and he"],
+                answer: 1,
+                explain: "作主语必须用主格，习惯上把其他人称放在 I 前面，即 He and I。"
+              }
+            ]
+          },
+          {
+            id: "1-2",
+            title: "物主代词：你的、我的、他的",
+            video: "第 2 集《你的、我的、他的（形容词）》+ 补1",
+            summary: "区分「形容词性物主代词」（后面必须跟名词）与「名词性物主代词」（单独使用 = 形物代 + 名词）。",
+            formula: "形物代 (my/your/his/her...) + 名词  =  名物代 (mine/yours/his/hers...)",
+            points: [
+              "形物代不能单独使用，后面必须带名词：my book。",
+              "名物代自带名词属性，后面绝不再加名词：This book is mine."
+            ],
+            examples: [
+              { en: "This is her phone, not yours.", zh: "这是她的手机，不是你的。" },
+              { en: "Their classroom is bigger than ours.", zh: "他们的教室比我们的更大。" }
+            ],
+            quiz: [
+              {
+                q: "That bike is _____, not _____.",
+                options: ["my; your", "mine; yours", "mine; your", "my; yours"],
+                answer: 1,
+                explain: "两处后面都没有名词，都需要用名词性物主代词 mine 和 yours。"
+              }
+            ]
+          },
+          {
+            id: "1-3",
+            title: "be 动词的本质与用法",
+            video: "第 3 集《be动词基本用法》",
+            summary: "记住「我用 am，你用 are，is 连着他她它，复数全用 are」。be 动词表示「是 / 在 / 处于某种状态」。",
+            formula: "主语 + am / is / are (过去式 was / were) + 名词 / 形容词 / 介词短语",
+            points: [
+              "中文里「我很高」没有「是」，但英文必须有动词：I am tall.",
+              "句子里已有实义动词作谓语时，不要乱加 be 动词（❌ I am like apples）。"
+            ],
+            examples: [
+              { en: "They are in the library.", zh: "他们在图书馆里。" },
+              { en: "She was very tired yesterday.", zh: "她昨天很累。" }
+            ],
+            quiz: [
+              {
+                q: "下列哪个句子语法完全正确？",
+                options: ["I am very happy.", "I very happy.", "She is work hard.", "They was at home."],
+                answer: 0,
+                explain: "happy 是形容词，需要 be 动词连接；C 多了 is；D 主语复数应用 were。"
+              }
+            ]
+          },
+          {
+            id: "1-4",
+            title: "名词、冠词与五大基本句型",
+            video: "体系补全（零基础必学骨架）",
+            summary: "所有英语句子无论多长，骨架永远逃不出「五大基本句型」，再配上可数/不可数名词与冠词 a/an/the。",
+            formula: "1.主谓(SV)  2.主谓宾(SVO)  3.主系表(SVP)  4.主谓双宾(SVOO)  5.主谓宾补(SVOC)",
+            points: [
+              "可数名词单数不能裸奔，前面通常要有 a/an/the/my 等限定词。",
+              "a/an 看发音不看字母：an hour（h不发音），a university（u发/j/辅音）。",
+              "the 表特指（双方都知道或前文提过的）。"
+            ],
+            examples: [
+              { en: "He gave me a useful book.", zh: "他给了我一本有用的书。（SVOO）" },
+              { en: "The news made us happy.", zh: "这个消息让我们很开心。（SVOC）" }
+            ],
+            quiz: [
+              {
+                q: "He is _____ honest boy.",
+                options: ["a", "an", "the", "/"],
+                answer: 1,
+                explain: "honest 中 h 不发音，以元音音素开头，泛指一个诚实的男孩用 an。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w2",
+        name: "World 2 · 句型工坊：造句三大变形术",
+        subtitle: "一般疑问句、特殊疑问句、否定句、祈使与感叹",
+        stages: [
+          {
+            id: "2-1",
+            title: "一般疑问句的底层原理",
+            video: "第 4 集《一般疑问句的底层原理》",
+            summary: "一句话变一般疑问句：「有 be 提 be，有情提情，无 be 无情请助动（do/does/did），动词现原形」。",
+            formula: "Be / 情态动词 / Do(Does/Did) + 主语 + 动词原形... ?",
+            points: [
+              "助动词 do/does/did 把时态和单三吸走，后面的实义动词必须恢复原形！",
+              "例：He likes coffee. → Does he like coffee?"
+            ],
+            examples: [
+              { en: "Did you finish your homework?", zh: "你完成作业了吗？" },
+              { en: "Can she swim?", zh: "她会游泳吗？" }
+            ],
+            quiz: [
+              {
+                q: "将「She went to Beijing yesterday.」改为一般疑问句：",
+                options: ["Did she went to Beijing yesterday?", "Does she go to Beijing yesterday?", "Did she go to Beijing yesterday?", "Was she go to Beijing yesterday?"],
+                answer: 2,
+                explain: "went 是过去式实义动词，请助动词 Did 提前，went 恢复原形 go。"
+              }
+            ]
+          },
+          {
+            id: "2-2",
+            title: "特殊疑问句的底层原理",
+            video: "第 5 集《特殊疑问句的底层原理》",
+            summary: "特殊疑问句 = 特殊疑问词（what/where/when/who/why/how） + 一般疑问句语序（对主语提问除外）。",
+            formula: "疑问词 + 一般疑问句（对主语提问除外：Who + 谓语...）",
+            points: [
+              "先确定要问什么，再把后面变成一般疑问句语序：Where do you live?",
+              "对主语提问直接用陈述语序：Who broke the window?"
+            ],
+            examples: [
+              { en: "Why did he leave early?", zh: "他为什么这么早离开？" },
+              { en: "Who broke the window?", zh: "谁打破了窗户？" }
+            ],
+            quiz: [
+              {
+                q: "「你住在哪里？」正确的英文是：",
+                options: ["Where you live?", "Where are you live?", "Where do you live?", "Where does you live?"],
+                answer: 2,
+                explain: "live 是实义动词，主语是 you，需要助动词 do 构成一般疑问语序。"
+              }
+            ]
+          },
+          {
+            id: "2-3",
+            title: "否定句的底层原理",
+            video: "补《否定句的底层原理》",
+            summary: "英文的 not 只能跟在「be 动词、情态动词、助动词」后面，绝不能直接加在实义动词前面。",
+            formula: "主语 + be / 情态动词 / do(does/did) + not + 动词原形...",
+            points: [
+              "❌ I not like it.  →  ✅ I don't like it.",
+              "过去式否定：He didn't go.（didn't 吸走过去时，go 用原形）"
+            ],
+            examples: [
+              { en: "She doesn't know the answer.", zh: "她不知道答案。" },
+              { en: "You mustn't park here.", zh: "你不能在这里停车。" }
+            ],
+            quiz: [
+              {
+                q: "「他昨天没来。」正确表达是：",
+                options: ["He didn't came yesterday.", "He not came yesterday.", "He didn't come yesterday.", "He wasn't come yesterday."],
+                answer: 2,
+                explain: "实义动词过去式否定用 didn't + 动词原形 come。"
+              }
+            ]
+          },
+          {
+            id: "2-4",
+            title: "祈使句与感叹句",
+            video: "第 43 集《祈使句》+ 第 44 集《感叹句》",
+            summary: "祈使句省略主语 you，动词原形开头；感叹句用 What 修饰名词，How 修饰形容词/副词。",
+            formula: "祈使：(Don't) + 动词原形  |  感叹：What (+a/an) + 形 + 名! / How + 形/副!",
+            points: [
+              "祈使句否定永远用 Don't 开头：Don't be late!",
+              "感叹句去主谓看核心：中心词是名词用 What，是形/副用 How。"
+            ],
+            examples: [
+              { en: "What a beautiful day!", zh: "多么美好的一天啊！" },
+              { en: "How fast he runs!", zh: "他跑得多快啊！" }
+            ],
+            quiz: [
+              {
+                q: "_____ nice weather it is today!",
+                options: ["How", "What", "What a", "How a"],
+                answer: 1,
+                explain: "weather 是不可数名词，中心词是名词用 What，且不能加 a。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w3",
+        name: "World 3 · 时间轴城堡：时态与语态全通关",
+        subtitle: "三大一般时、进行时、完成时、被动语态与情态动词",
+        stages: [
+          {
+            id: "3-1",
+            title: "三大一般时（现在/过去/将来）",
+            video: "第 6-8 集《一般过去/现在/将来时》",
+            summary: "习惯真理用一般现在，已发生用一般过去，计划预测用一般将来。",
+            formula: "现在：do/does  |  过去：did  |  将来：will do / be going to do",
+            points: [
+              "一般现在时：表习惯动作或客观真理。",
+              "一般过去时：动作发生在过去且已结束（yesterday / last week）。",
+              "一般将来时：will 表临时决定或预测；be going to 表计划或有迹象。"
+            ],
+            examples: [
+              { en: "The earth moves around the sun.", zh: "地球绕着太阳转。" },
+              { en: "Look at the dark clouds! It is going to rain.", zh: "看那些乌云！要下雨了。" }
+            ],
+            quiz: [
+              {
+                q: "I _____ him three days ago.",
+                options: ["meet", "met", "will meet", "have met"],
+                answer: 1,
+                explain: "three days ago 表示明确的过去时间，用一般过去时 met。"
+              }
+            ]
+          },
+          {
+            id: "3-2",
+            title: "现在进行时 & 过去进行时",
+            video: "第 9 集《现在/过去进行时》",
+            summary: "「be + doing」表示在某个时间点动作「正在持续进行」。",
+            formula: "现在进行：am/is/are + doing  |  过去进行：was/were + doing",
+            points: [
+              "现在进行时：此刻正在做（now / look / listen）。",
+              "过去进行时：过去某个具体时刻正在做（at 8 pm last night）。"
+            ],
+            examples: [
+              { en: "I was taking a shower when the phone rang.", zh: "电话响的时候我正在洗澡。" },
+              { en: "Listen! Someone is singing.", zh: "听！有人正在唱歌。" }
+            ],
+            quiz: [
+              {
+                q: "When I arrived home, my mother _____ dinner.",
+                options: ["cooked", "is cooking", "was cooking", "cooks"],
+                answer: 2,
+                explain: "当我到家（过去时间点）时，妈妈“正在做”晚饭，用过去进行时 was cooking。"
+              }
+            ]
+          },
+          {
+            id: "3-3",
+            title: "现在完成时 & 过去完成时",
+            video: "第 10 集《现在/过去完成时(基础语法完结)》",
+            summary: "现在完成看「过去对现在的影响/持续到现在」；过去完成是「过去的过去」。",
+            formula: "现在完成：have/has + done  |  过去完成：had + done",
+            points: [
+              "现在完成时不能和具体的过去时间（如 yesterday）连用！常用 since / for。",
+              "过去完成时（had done）必须有一个「过去的参照点」，表示在此之前已完成。"
+            ],
+            examples: [
+              { en: "I have lived here for ten years.", zh: "我在这里住了十年了。" },
+              { en: "By the time we arrived, the train had left.", zh: "我们到达时，火车已经开走了。" }
+            ],
+            quiz: [
+              {
+                q: "She _____ in this company since 2021.",
+                options: ["worked", "works", "has worked", "had worked"],
+                answer: 2,
+                explain: "since 2021（自从2021年至今）是现在完成时的典型标志。"
+              }
+            ]
+          },
+          {
+            id: "3-4",
+            title: "被动语态与情态动词",
+            video: "体系补全（动词体系闭环）",
+            summary: "主语是承受者用被动（be + done）；情态动词表达态度，后接动词原形。",
+            formula: "被动：be(随时态变化) + done  |  情态：can/may/must/should + 动词原形",
+            points: [
+              "被动语态时态靠 be 体现：is made / was built / will be finished。",
+              "情态动词无人称和单三变化：He can swim."
+            ],
+            examples: [
+              { en: "English is spoken all over the world.", zh: "全世界都说英语。" },
+              { en: "The bridge was built in 1998.", zh: "这座桥建于1998年。" }
+            ],
+            quiz: [
+              {
+                q: "This book _____ by a famous writer last year.",
+                options: ["wrote", "was written", "is written", "has written"],
+                answer: 1,
+                explain: "书是“被写”，且时间为 last year，故用一般过去时被动语态 was written。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w4",
+        name: "World 4 · 修饰殿堂（上）：定语从句与非谓语",
+        subtitle: "英语长难句的核心引擎：定从 + 三大非谓语",
+        stages: [
+          {
+            id: "4-1",
+            title: "英语的构成与定语从句入门",
+            video: "第 11 集《英语的构成+定语从句1》",
+            summary: "英文先说主干，再把长修饰放后面。定语从句就是用一个句子去修饰前面的名词（先行词）。",
+            formula: "先行词(名词) + 关系代词(who / which / that) + 残缺句子",
+            points: [
+              "指人用 who/that，指物用 which/that。",
+              "关系代词在从句中作宾语时可以省略。"
+            ],
+            examples: [
+              { en: "The man who called you is my boss.", zh: "给你打电话的那个人是我老板。" },
+              { en: "I lost the watch which you gave me.", zh: "我把你给我的手表弄丢了。" }
+            ],
+            quiz: [
+              {
+                q: "The girl _____ is wearing a red coat is my sister.",
+                options: ["which", "who", "whom", "whose"],
+                answer: 1,
+                explain: "先行词是 the girl（人），且在从句中作主语，用 who。"
+              }
+            ]
+          },
+          {
+            id: "4-2",
+            title: "定语从句进阶：关系副词与介词+which",
+            video: "第 12 集《定语从句2》",
+            summary: "从句主谓宾完整、不缺名词时，改用关系副词 when / where / why。",
+            formula: "时间+when | 地点+where | reason+why （等价于 介词 + which）",
+            points: [
+              "区分 which 和 where 的唯一标准：看从句缺不缺主语或宾语！",
+              "the house where I lived（不缺宾语） vs the house which I bought（缺宾语）。"
+            ],
+            examples: [
+              { en: "I will never forget the day when we met.", zh: "我永远不会忘记我们相遇的那一天。" },
+              { en: "That is the reason why he left.", zh: "那就是他离开的原因。" }
+            ],
+            quiz: [
+              {
+                q: "This is the school _____ I studied three years ago.",
+                options: ["which", "that", "where", "who"],
+                answer: 2,
+                explain: "I studied 句子完整，缺地点状语，用 where。"
+              }
+            ]
+          },
+          {
+            id: "4-3",
+            title: "限定与非限定性定语从句",
+            video: "第 13 集《限定/非限定性定语从句》+ 专项",
+            summary: "有逗号隔开的就是非限定性定语从句，相当于补充说明，且绝不能用 that。",
+            formula: "先行词/前面整句话 + , + which / who / whose ...（禁用 that）",
+            points: [
+              "which 可指代前面整件事：He passed the exam, which surprised us.",
+              "whose 表「……的」，既可指人也可指物。"
+            ],
+            examples: [
+              { en: "My sister, who lives in Shanghai, is a nurse.", zh: "我姐姐住在上海，是一名护士。" },
+              { en: "He was late again, which made the teacher angry.", zh: "他又迟到了，这让老师很生气。" }
+            ],
+            quiz: [
+              {
+                q: "She won the first prize, _____ made her parents proud.",
+                options: ["that", "which", "what", "who"],
+                answer: 1,
+                explain: "逗号后的非限定性定从指代前面整件事，只能用 which，不能用 that。"
+              }
+            ]
+          },
+          {
+            id: "4-4",
+            title: "非谓语动词入门与独立主格",
+            video: "第 14-15 集《非谓语1-2 + 独立主格初见》",
+            summary: "一句英文只能有一个谓语动词！多出来的动词必须变成「非谓语」（doing / done / to do）。",
+            formula: "doing（主动/进行） | done（被动/完成） | 独立主格：名词/代词 + 非谓语",
+            points: [
+              "看逻辑主语是「主动发出」还是「被动承受」。",
+              "独立主格：非谓语自带逻辑主语，如 Weather permitting, we'll go out."
+            ],
+            examples: [
+              { en: "Seeing the dog, the boy ran away.", zh: "看到狗，男孩跑开了。（主动）" },
+              { en: "Seen from the hill, the city looks beautiful.", zh: "从山上看，这座城市很美。（被动）" }
+            ],
+            quiz: [
+              {
+                q: "_____ from the top of the mountain, the lake looks like a mirror.",
+                options: ["Seeing", "Seen", "To see", "See"],
+                answer: 1,
+                explain: "the lake 与 see 是被动关系（湖被看），所以用过去分词 Seen。"
+              }
+            ]
+          },
+          {
+            id: "4-5",
+            title: "to do 用法与 ing/ed 情绪辨析",
+            video: "第 16-18 集《to do / 主动表被动 / ing和ed》+ 专项",
+            summary: "to do 表「目的/将要/未做」；-ing 表「令人……」，-ed 表「感到……」。",
+            formula: "to do（目的/将来） | 令人产生情绪：-ing | 自己感到情绪：-ed",
+            points: [
+              "表目的用 to do：I came here to help you.",
+              "breaking 误区：-ing 也可以修饰人，如 He is an exciting person（令人兴奋的人）。"
+            ],
+            examples: [
+              { en: "The book is easy to read.", zh: "这本书很容易读。（主动表被动）" },
+              { en: "The news is surprising, so we are surprised.", zh: "消息令人惊讶，所以我们感到惊讶。" }
+            ],
+            quiz: [
+              {
+                q: "She got up early _____ the first bus.",
+                options: ["catch", "catching", "to catch", "caught"],
+                answer: 2,
+                explain: "早起的目的是为了赶上第一班车，表目的用不定式 to catch。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w5",
+        name: "World 5 · 从句迷宫：名词性、表语、状语与同位语",
+        subtitle: "把一个完整句子当成名词或副词来使用",
+        stages: [
+          {
+            id: "5-1",
+            title: "及物/不及物动词 & 宾语从句",
+            video: "补《及物|不及物动词》+ 第 19 集《宾语从句》",
+            summary: "及物动词后接宾语；当宾语是个完整句子时就是宾语从句，铁律是「陈述语序」。",
+            formula: "主语 + 及物动词 + (that / whether / if / 疑问词) + 主语 + 谓语...",
+            points: [
+              "永远用陈述语序：Tell me where he lives.（❌ where does he live）。",
+              "that 无实义常可省略；whether/if 表「是否」。"
+            ],
+            examples: [
+              { en: "I don't know what he wants.", zh: "我不知道他想要什么。" },
+              { en: "She asked if I could help her.", zh: "她问我是否能帮她。" }
+            ],
+            quiz: [
+              {
+                q: "Could you tell me _____?",
+                options: ["where is the station", "where the station is", "where was the station", "the station is where"],
+                answer: 1,
+                explain: "宾语从句必须使用陈述语序，即 where the station is。"
+              }
+            ]
+          },
+          {
+            id: "5-2",
+            title: "主语从句、形式主语 & 名词性成分归总",
+            video: "第 20-22 集《主语从句 / 名词性从句 / 归总》+ 专项",
+            summary: "句子作主语叫主语从句，常用 It 作形式主语防止头重脚轻。",
+            formula: "It is + adj./n. + that/to do... | What... + 谓语",
+            points: [
+              "that 引导主语从句不能省略：That he won is true.",
+              "what 相当于「the thing that」，既引导从句又充当主/宾语。"
+            ],
+            examples: [
+              { en: "It is important that we learn English well.", zh: "我们学好英语很重要。" },
+              { en: "What he said surprised everyone.", zh: "他说的话让所有人吃惊。" }
+            ],
+            quiz: [
+              {
+                q: "_____ we need now is more time.",
+                options: ["That", "Which", "What", "Who"],
+                answer: 2,
+                explain: "we need now 缺宾语，既引导主语从句又作宾语用 What。"
+              }
+            ]
+          },
+          {
+            id: "5-3",
+            title: "系动词特征 & 表语从句",
+            video: "第 23-24 集《系动词特征 / 表语从句》",
+            summary: "系动词（be / look / sound / become / seem）后面的句子就是表语从句。",
+            formula: "主语 + 系动词 + that / what / because / as if + 从句",
+            points: [
+              "系动词后直接接形容词，且无被动语态。",
+              "The reason is that...（不用 because）；This is why...（这就是为什么……）。"
+            ],
+            examples: [
+              { en: "The problem is that we have no money.", zh: "问题是我们没有钱。" },
+              { en: "It seems that it is going to rain.", zh: "看起来好像要下雨了。" }
+            ],
+            quiz: [
+              {
+                q: "The reason why he failed is _____ he was too careless.",
+                options: ["because", "that", "what", "which"],
+                answer: 1,
+                explain: "The reason... is that... 是固定搭配，不用 because。"
+              }
+            ]
+          },
+          {
+            id: "5-4",
+            title: "状语从句全家桶（含省略与 so/such that）",
+            video: "第 25-27 集《状语从句1-2 / so such that》",
+            summary: "用「连词 + 句子」说明时间、条件、原因、让步、结果等逻辑。",
+            formula: "when/if/because/although + 句子 | so + 形/副 + that | such + 名词 + that",
+            points: [
+              "主将从现：时间/条件状语从句中，用一般现在时代替将来。",
+              "although 和 but 不能同时出现！"
+            ],
+            examples: [
+              { en: "He is so young that he can't go to school.", zh: "他太小了，还不能去上学。" },
+              { en: "Although he is rich, he lives a simple life.", zh: "虽然他很富有，但他过着简朴的生活。" }
+            ],
+            quiz: [
+              {
+                q: "If it _____ sunny tomorrow, we will go hiking.",
+                options: ["will be", "is", "was", "be"],
+                answer: 1,
+                explain: "主将从现原则：if 引导的条件状语从句用一般现在时 is。"
+              }
+            ]
+          },
+          {
+            id: "5-5",
+            title: "同位语（从句）& 与定从的终极区分",
+            video: "第 28 集《同位语(从句) & 与定从的区分》",
+            summary: "同位语从句解释说明抽象名词（news/fact/idea）的具体内容，两者画等号。",
+            formula: "抽象名词(news/fact/idea) + that + 完整句子（that 不作成分）",
+            points: [
+              "定从是「修饰」，that 必作主/宾语；同位语从句是「解释内容」，that 不作成分且不能省略！"
+            ],
+            examples: [
+              { en: "We heard the news that our team won.", zh: "我们听到了我们队获胜的消息。" }
+            ],
+            quiz: [
+              {
+                q: "「The news that he passed the exam made us happy.」中 that 引导的是：",
+                options: ["定语从句", "同位语从句", "宾语从句", "表语从句"],
+                answer: 1,
+                explain: "he passed the exam 主谓宾完整，用来解释 news 的内容，是同位语从句。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w6",
+        name: "World 6 · 修饰殿堂（下）：介词、形容词与副词",
+        subtitle: "六大修饰体系闭环，彻底看懂介词底层逻辑",
+        stages: [
+          {
+            id: "6-1",
+            title: "介词短语核心逻辑（with / 方位 / 作定语）",
+            video: "第 29-32 集《with / 方位介词 / 介短作定语》",
+            summary: "「介词 + 名词」作后置定语或状语，重点掌握 with 复合结构。",
+            formula: "名词 + 介词短语（后置定语） | with + 宾语 + 宾补",
+            points: [
+              "with 核心含义「伴随/带着」：a girl with big eyes。",
+              "with 复合结构：With the work finished, he went home."
+            ],
+            examples: [
+              { en: "The man in black is my uncle.", zh: "穿黑衣服的那个人是我叔叔。" },
+              { en: "He slept with the window open.", zh: "他开着窗户睡觉。" }
+            ],
+            quiz: [
+              {
+                q: "With all the problems _____, they felt relaxed.",
+                options: ["solve", "solving", "solved", "to solve"],
+                answer: 2,
+                explain: "problems 和 solve 是被动关系（问题被解决），用过去分词 solved。"
+              }
+            ]
+          },
+          {
+            id: "6-2",
+            title: "高频介词底层逻辑（of / from / to / for）",
+            video: "第 33-34 集《of、from / to、for超底层逻辑》+ 专项",
+            summary: "理解介词核心画面：of(所属)、from(起点)、to(终点/方向)、for(目的/对象)。",
+            formula: "A of B（B 的 A） | from A to B | for（为了/对于）",
+            points: [
+              "to 指向终点与对应：key to the door / answer to the question。",
+              "for 指向目的或受益者：good for you / thank you for..."
+            ],
+            examples: [
+              { en: "What is the secret to success?", zh: "成功的秘诀是什么？" },
+              { en: "Thank you for helping me.", zh: "谢谢你帮我。" }
+            ],
+            quiz: [
+              {
+                q: "Here is the key _____ the front door.",
+                options: ["of", "for", "to", "with"],
+                answer: 2,
+                explain: "key to... 体现 to「通向对应目标」的底层逻辑。"
+              }
+            ]
+          },
+          {
+            id: "6-3",
+            title: "形容词作定语/状语 & 自造形容词",
+            video: "第 35-38 集《形容词作定语、状语 / 自造形容词1-2》",
+            summary: "形容词修饰名词或作伴随状语，还能通过合成词灵活「自造形容词」。",
+            formula: "adj. + n. | 不定代词 + adj. | 合成形容词：副词/名词 + 分词",
+            points: [
+              "修饰 something / anything / nothing 时，形容词必须后置。",
+              "合成形容词：widely-spoken（广泛使用的）、heart-breaking（令人心碎的）。"
+            ],
+            examples: [
+              { en: "I have something interesting to tell you.", zh: "我有一些有趣的事要告诉你。" },
+              { en: "English is a widely-spoken language.", zh: "英语是一门被广泛使用的语言。" }
+            ],
+            quiz: [
+              {
+                q: "Is there _____ in today's newspaper?",
+                options: ["new anything", "anything new", "something new", "new something"],
+                answer: 1,
+                explain: "疑问句用 anything，形容词修饰复合不定代词必须后置。"
+              }
+            ]
+          },
+          {
+            id: "6-4",
+            title: "名词作定语/状语 & 副词（六大修饰完结）",
+            video: "第 39-40 集《名词作定语、状语 / 副词(六大修饰完结)》",
+            summary: "名词可直接修饰名词；副词修饰动/形/副/全句。至此六大修饰全部集齐！",
+            formula: "名词+名词（前一个多用单数） | 副词修饰：动 / 形 / 副 / 全句",
+            points: [
+              "名词作定语一般用单数：a shoe store（man/woman 除外，如 women doctors）。",
+              "副词修饰全句常放句首：Luckily, nobody was hurt."
+            ],
+            examples: [
+              { en: "There are two women teachers in our office.", zh: "我们办公室有两位女老师。" },
+              { en: "He speaks English fluently.", zh: "他英语说得很流利。" }
+            ],
+            quiz: [
+              {
+                q: "_____, he passed the driving test on his first try.",
+                options: ["Lucky", "Luckily", "Luck", "More lucky"],
+                answer: 1,
+                explain: "修饰整个句子表示“幸运的是”，需要用副词 Luckily。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w7",
+        name: "World 7 · 高阶圣殿：特殊句式与虚拟语气",
+        subtitle: "倒装、强调、主谓一致、be 的进阶与虚拟语气",
+        stages: [
+          {
+            id: "7-1",
+            title: "倒装句（部分倒装与全部倒装）",
+            video: "第 41-42 集《倒装句1-2》",
+            summary: "把否定词或「Only+状语」提前到句首时，助动词/be/情态动词要提到主语前。",
+            formula: "否定词/Only+状语 + 助动词/be/情态 + 主语 + 谓语",
+            points: [
+              "Never / Seldom / Hardly / Not only 放句首必部分倒装。",
+              "Only + 状语放句首必倒装；Only + 主语不倒装。"
+            ],
+            examples: [
+              { en: "Only when you lose it do you know its value.", zh: "只有失去时你才知道它的价值。" },
+              { en: "Never will I give up.", zh: "我绝不放弃。" }
+            ],
+            quiz: [
+              {
+                q: "Not only _____ well, but he also dances well.",
+                options: ["he sings", "does he sing", "sings he", "he does sing"],
+                answer: 1,
+                explain: "Not only 位于句首引导分句，该分句需部分倒装，将 does 提到 he 前。"
+              }
+            ]
+          },
+          {
+            id: "7-2",
+            title: "强调句 & 主谓一致",
+            video: "第 45 集《强调句的底层逻辑》+ 主谓一致",
+            summary: "强调句用 It is/was... that/who...；主谓一致关注就近原则与就远原则。",
+            formula: "It is / was + 被强调部分 + that / who + 句子剩余部分",
+            points: [
+              "检验强调句：去掉 It is/was 和 that，剩下的词依然能拼成完整通顺的话！",
+              "就近（neither...nor / there be）；就远（A with/as well as B 看 A）。"
+            ],
+            examples: [
+              { en: "It was yesterday that I met him.", zh: "我就是昨天遇见他的。" },
+              { en: "The teacher, as well as the students, is excited.", zh: "老师和学生们都很兴奋。" }
+            ],
+            quiz: [
+              {
+                q: "It was in the park _____ I found my lost keys.",
+                options: ["where", "which", "that", "when"],
+                answer: 2,
+                explain: "去掉 It was 和空位后，in the park I found my lost keys 是完整句子，为强调句，填 that。"
+              }
+            ]
+          },
+          {
+            id: "7-3",
+            title: "be 动词的进阶用法",
+            video: "第 46-47 集《be的进阶用法1-2》",
+            summary: "掌握 be to do（计划/义务）、be about to do（正要）及 be of + 抽象名词。",
+            formula: "be to do（计划/要求） | be about to do... when...（正要……突然……）",
+            points: [
+              "You are to finish it by Friday.（命令/义务）。",
+              "be of great value = be very valuable。"
+            ],
+            examples: [
+              { en: "I was about to leave when the phone rang.", zh: "我正要离开，这时电话响了。" },
+              { en: "Your advice is of great help to me.", zh: "你的建议对我很有帮助。" }
+            ],
+            quiz: [
+              {
+                q: "The new policy _____ take effect next month.",
+                options: ["is to", "is about", "will be to", "was"],
+                answer: 0,
+                explain: "be to do 表示按计划或官方安排将要发生。"
+              }
+            ]
+          },
+          {
+            id: "7-4",
+            title: "虚拟语气全解（主语法压轴）",
+            video: "第 48、50 集《虚拟语气1-2(主语法全部完结)》",
+            summary: "用「时态往后退一步」来表达「与事实相反」的假设、愿望和遗憾。",
+            formula: "虚拟现在：If + did/were, 主+would do | 虚拟过去：If + had done, 主+would have done",
+            points: [
+              "与现在事实相反：if 从句用过去式（be 用 were），主句用 would/could + do。",
+              "与过去事实相反：if 从句用 had done，主句用 would/could + have done。"
+            ],
+            examples: [
+              { en: "If I were you, I would accept the offer.", zh: "如果我是你，我会接受这个邀请。" },
+              { en: "If he had studied harder, he would have passed.", zh: "如果他当时更努力学习，他就会及格了。" }
+            ],
+            quiz: [
+              {
+                q: "If I _____ enough money now, I would buy that car.",
+                options: ["have", "had", "had had", "will have"],
+                answer: 1,
+                explain: "now 提示与现在事实相反，if 从句动词用一般过去时 had。"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "w8",
+        name: "World 8 · 终极试炼：高频驱动词与长难句实战",
+        subtitle: "打通阅读理解与外刊长难句的最后一公里",
+        stages: [
+          {
+            id: "8-1",
+            title: "三大驱动词（take / make / have）与使役动词",
+            video: "专题 -1 ~ -3 & -6《驱动词与使役动词》",
+            summary: "用活万能驱动词：make/let/have（让某人做/让某事被做）。",
+            formula: "make/let/have + sb. + do | have/get + sth. + done",
+            points: [
+              "make/let/have 后接不带 to 的动词原形（被动时 to 还原：be made to do）。",
+              "have sth. done：请人做某事或遭遇不幸。"
+            ],
+            examples: [
+              { en: "I need to have my car repaired.", zh: "我需要找人修一下车。" },
+              { en: "Nothing can make him change his mind.", zh: "没有什么能让他改变主意。" }
+            ],
+            quiz: [
+              {
+                q: "You'd better have your teeth _____ regularly.",
+                options: ["check", "checking", "checked", "to check"],
+                answer: 2,
+                explain: "teeth（牙齿）是被检查，用 have sth. done 结构，选 checked。"
+              }
+            ]
+          },
+          {
+            id: "8-2",
+            title: "as 超底层逻辑全家桶",
+            video: "专题 -4.1 ~ -4.5《as 介/连/副/as well as》",
+            summary: "彻底攻克英语第一多面手 as：核心含义永远是「等同、像、随着」。",
+            formula: "介词(作为) | 连词(因为/当/正如/虽然[倒装]) | A as well as B(谓语跟A)",
+            points: [
+              "as 表「虽然」必须倒装：Young as he is, he knows a lot.",
+              "A as well as B 作主语时，谓语动词跟 A 一致！"
+            ],
+            examples: [
+              { en: "Do as I told you.", zh: "照我告诉你的去做。" },
+              { en: "She plays the piano as well as the violin.", zh: "她不仅会拉小提琴，还会弹钢琴。" }
+            ],
+            quiz: [
+              {
+                q: "_____, he is very brave.",
+                options: ["As he is a child", "Child as he is", "A child as he is", "As a child he is"],
+                answer: 1,
+                explain: "as 引导让步状语从句时，名词前不加冠词并提前到句首：Child as he is。"
+              }
+            ]
+          },
+          {
+            id: "8-3",
+            title: "阅读高级陷阱：where 虚拟地点与肯定表否定",
+            video: "专题 -5 & -7 ~ -10《where虚拟地点 / 肯定表否定》",
+            summary: "避开阅读最常踩的坑：肯定形式表否定（far from / anything but / fail to）与抽象名词后的 where。",
+            formula: "fail to do(未能) | anything but(绝不) | far from(远非) | 抽象点+where",
+            points: [
+              "The movie is anything but boring.（这电影一点也不无聊）。",
+              "where 可修饰抽象情形/阶段：a point where... / a situation where...。"
+            ],
+            examples: [
+              { en: "We reached a point where we had to make a choice.", zh: "我们到了必须做出选择的地步。" },
+              { en: "I am too tired to walk any further.", zh: "我太累了，走不动了。" }
+            ],
+            quiz: [
+              {
+                q: "「His work is far from satisfactory.」的意思是：",
+                options: ["他的工作非常令人满意", "他的工作远非令人满意（很不满意）", "他的工作离成功很近", "他的工作已经结束了"],
+                answer: 1,
+                explain: "far from 意为“远非、根本不”，属于肯定形式表否定。"
+              }
+            ]
+          },
+          {
+            id: "8-4",
+            title: "终极 Boss：复杂长难句四步拆解法",
+            video: "【阅读理解专项训练】(01:05:32)",
+            summary: "学完前面 31 关，用「四步拆解法」秒杀任何长难句！",
+            formula: "① 切分从句 → ② 括出介短与非谓语 → ③ 锁定主句主谓宾 → ④ 还原修饰顺畅翻译",
+            points: [
+              "先划掉/括起介词短语和逗号插入语，句子立刻缩短一半。",
+              "找到核心谓语动词，前面是主语，后面是宾语或表语。",
+              "把定语、状语逐个挂回它们修饰的词上。"
+            ],
+            examples: [
+              { en: "The book written by the scientist who won the prize has inspired millions of people.", zh: "这本由获奖科学家撰写的书已经激励了数百万人。" }
+            ],
+            quiz: [
+              {
+                q: "拆解长难句时，最先应该做什么来迅速看清主干？",
+                options: ["逐字查字典", "识别并括起介词短语、从句和非谓语修饰成分，锁定主句谓语", "删掉所有形容词", "只看最后一个单词"],
+                answer: 1,
+                explain: "先剥离修饰成分并锁定核心谓语，是拆解任何英文长难句的最快路径。"
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "gq_mobile_done_v1";
+    const THEME_KEY = "gq_mobile_theme_v1";
+
+    let completed = new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"));
+    let currentFilter = "all";
+    let currentTab = "map";
+    let activeStageId = null;
+    let quizAnswers = {};
+    let practiceQueue = [];
+    let practiceIdx = 0;
+    let practicePicked = null;
+
+    const allStages = WORLDS.flatMap(w => w.stages.map(s => ({ ...s, worldName: w.name })));
+
+    // 主题初始化
+    if (localStorage.getItem(THEME_KEY) === "dark") {
+      document.documentElement.classList.add("dark");
+      document.getElementById("themeBtn").textContent = "☀️ 日间";
+    }
+
+    document.getElementById("themeBtn").addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+      document.getElementById("themeBtn").textContent = isDark ? "☀️ 日间" : "🌙 夜间";
+    });
+
+    function speak(text) {
+      if (!("speechSynthesis" in window)) {
+        alert("当前浏览器不支持语音朗读");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "en-US";
+      utter.rate = 0.92;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function saveProgress() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
+    }
+
+    function getRank(n) {
+      if (n === 0) return "🌱 语法新手";
+      if (n < 8) return "🗡️ 句型学徒";
+      if (n < 16) return "🛡️ 时态剑士";
+      if (n < 24) return "🔮 从句法师";
+      if (n < 32) return "👑 修饰大师";
+      return "🏆 英语语法宗师";
+    }
+
+    function updateProgressUI() {
+      const done = completed.size;
+      const total = allStages.length;
+      const pct = Math.round((done / total) * 100);
+      document.getElementById("rankBadge").textContent = getRank(done);
+      document.getElementById("progressText").textContent = `${done} / ${total} 关 (${pct}%)`;
+      document.getElementById("progressFill").style.width = `${pct}%`;
+    }
+
+    function renderMap() {
+      updateProgressUI();
+      const container = document.getElementById("worldsContainer");
+      container.innerHTML = "";
+
+      WORLDS.forEach(world => {
+        const list = world.stages.filter(s => {
+          if (currentFilter === "done") return completed.has(s.id);
+          if (currentFilter === "todo") return !completed.has(s.id);
+          return true;
+        });
+        if (!list.length) return;
+
+        const doneCount = world.stages.filter(s => completed.has(s.id)).length;
+        const card = document.createElement("div");
+        card.className = "world-card";
+        card.innerHTML = `
+          <div class="world-head">
+            <div>
+              <div class="world-title">${world.name}</div>
+              <div class="world-sub">${world.subtitle}</div>
+            </div>
+            <div class="world-stat">${doneCount}/${world.stages.length}</div>
+          </div>
+          <div class="stage-list"></div>
+        `;
+
+        const stageList = card.querySelector(".stage-list");
+        list.forEach(stage => {
+          const isDone = completed.has(stage.id);
+          const btn = document.createElement("button");
+          btn.className = `stage-btn ${isDone ? "done" : ""}`;
+          btn.innerHTML = `
+            <div style="min-width:0">
+              <div class="stage-meta">
+                <span>关卡 ${stage.id}</span>
+                <span>•</span>
+                <span>${isDone ? "已通关" : "去学习"}</span>
+              </div>
+              <div class="stage-name">${stage.title}</div>
+              <div class="stage-video">${stage.video}</div>
+            </div>
+            <div class="stage-badge">${isDone ? "✓" : "→"}</div>
+          `;
+          btn.addEventListener("click", () => openDetail(stage.id));
+          stageList.appendChild(btn);
+        });
+
+        container.appendChild(card);
+      });
+
+      if (!container.children.length) {
+        container.innerHTML = `<div class="world-card" style="text-align:center;color:var(--muted);font-size:14px;">当前筛选下暂无关卡</div>`;
+      }
+    }
+
+    function openDetail(stageId) {
+      activeStageId = stageId;
+      document.getElementById("viewMap").classList.add("hidden");
+      document.getElementById("viewDetail").classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      renderDetail();
+    }
+
+    function closeDetail() {
+      activeStageId = null;
+      document.getElementById("viewDetail").classList.add("hidden");
+      document.getElementById("viewMap").classList.remove("hidden");
+      renderMap();
+    }
+
+    function renderDetail() {
+      const idx = allStages.findIndex(s => s.id === activeStageId);
+      const stage = allStages[idx];
+      if (!stage) return;
+
+      const isDone = completed.has(stage.id);
+      const prev = idx > 0 ? allStages[idx - 1] : null;
+      const next = idx < allStages.length - 1 ? allStages[idx + 1] : null;
+      const pickedMap = quizAnswers[stage.id] || {};
+
+      const el = document.getElementById("viewDetail");
+      el.innerHTML = `
+        <button class="detail-back" id="backMapBtn">← 返回闯关地图</button>
+
+        <div class="section-box">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+            <div>
+              <div style="font-size:12px;color:var(--muted);">${stage.worldName}</div>
+              <h2 style="margin:4px 0 0;font-size:18px;font-weight:800;">关卡 ${stage.id} · ${stage.title}</h2>
+            </div>
+            <button id="toggleStageBtn" class="pill-btn" style="${isDone ? "background:var(--ok-soft);color:var(--ok);border-color:var(--ok);" : "background:var(--primary);color:#fff;border-color:var(--primary);"}">
+              ${isDone ? "✓ 已通关" : "标记通关"}
+            </button>
+          </div>
+          <div class="tag-video">🎬 ${stage.video}</div>
+          <p style="margin:12px 0 0;font-size:14px;">${stage.summary}</p>
+          <div class="formula-box">💡 ${stage.formula}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--muted);">📌 核心要点</div>
+          <ul class="point-list">
+            ${stage.points.map(p => `<li>${p}</li>`).join("")}
+          </ul>
+        </div>
+
+        <div class="section-box">
+          <div style="font-size:14px;font-weight:800;margin-bottom:4px;">✍️ 经典例句（点击 🔊 听发音）</div>
+          ${stage.examples.map((ex, i) => `
+            <div class="example-item">
+              <div>
+                <div style="font-size:14px;font-weight:600;">${ex.en}</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">${ex.zh}</div>
+              </div>
+              <button class="speak-btn" data-speak="${i}" aria-label="朗读例句">🔊</button>
+            </div>
+          `).join("")}
+        </div>
+
+        <div class="section-box">
+          <div style="font-size:14px;font-weight:800;">🎯 过关小测验（全部答对自动通关）</div>
+          ${stage.quiz.map((q, qIdx) => {
+            const picked = pickedMap[qIdx];
+            const answered = picked !== undefined;
+            const isCorrect = picked === q.answer;
+            return `
+              <div class="quiz-card">
+                <div class="quiz-q">${qIdx + 1}. ${q.q}</div>
+                ${q.options.map((opt, oIdx) => {
+                  let cls = "";
+                  if (answered) {
+                    if (oIdx === q.answer) cls = "correct";
+                    else if (oIdx === picked) cls = "wrong";
+                  }
+                  return `<button class="quiz-opt ${cls}" data-q="${qIdx}" data-o="${oIdx}">${String.fromCharCode(65 + oIdx)}. ${opt}</button>`;
+                }).join("")}
+                ${answered ? `<div class="quiz-explain" style="color:${isCorrect ? "var(--ok)" : "var(--err)"}">${isCorrect ? "✅ 回答正确！" : "❌ 再看看："} ${q.explain}</div>` : ""}
+              </div>
+            `;
+          }).join("")}
+
+          <div class="nav-footer">
+            <button class="btn-secondary" id="prevStageBtn" ${!prev ? "disabled" : ""}>← 上一关</button>
+            <button class="btn-primary" id="nextStageBtn" ${!next ? "disabled" : ""}>下一关 ${next ? `(${next.id})` : ""} →</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("backMapBtn").addEventListener("click", closeDetail);
+      document.getElementById("toggleStageBtn").addEventListener("click", () => {
+        if (completed.has(stage.id)) completed.delete(stage.id);
+        else completed.add(stage.id);
+        saveProgress();
+        updateProgressUI();
+        renderDetail();
+      });
+
+      el.querySelectorAll("[data-speak]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const ex = stage.examples[Number(btn.dataset.speak)];
+          if (ex) speak(ex.en);
+        });
+      });
+
+      el.querySelectorAll(".quiz-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const qIdx = Number(btn.dataset.q);
+          const oIdx = Number(btn.dataset.o);
+          if (!quizAnswers[stage.id]) quizAnswers[stage.id] = {};
+          quizAnswers[stage.id][qIdx] = oIdx;
+
+          const allRight = stage.quiz.every((q, i) => quizAnswers[stage.id][i] === q.answer);
+          if (allRight) {
+            completed.add(stage.id);
+            saveProgress();
+            updateProgressUI();
+          }
+          renderDetail();
+        });
+      });
+
+      if (prev) {
+        document.getElementById("prevStageBtn").addEventListener("click", () => openDetail(prev.id));
+      }
+      if (next) {
+        document.getElementById("nextStageBtn").addEventListener("click", () => openDetail(next.id));
+      }
+    }
+
+    function initPractice() {
+      practiceQueue = allStages.flatMap(s =>
+        s.quiz.map(q => ({ ...q, stageId: s.id, stageTitle: s.title }))
+      );
+      practiceQueue.sort(() => Math.random() - 0.5);
+      practiceIdx = 0;
+      practicePicked = null;
+      renderPractice();
+    }
+
+    function renderPractice() {
+      const box = document.getElementById("viewPractice");
+      const item = practiceQueue[practiceIdx];
+      if (!item) return;
+
+      const answered = practicePicked !== null;
+      const isCorrect = practicePicked === item.answer;
+
+      box.innerHTML = `
+        <div class="section-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <span class="rank-badge">🎲 随机综合刷题</span>
+            <span style="font-size:12px;color:var(--muted);">第 ${practiceIdx + 1} / ${practiceQueue.length} 题</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px;">来自：关卡 ${item.stageId} · ${item.stageTitle}</div>
+          <div class="quiz-card">
+            <div class="quiz-q">${item.q}</div>
+            ${item.options.map((opt, oIdx) => {
+              let cls = "";
+              if (answered) {
+                if (oIdx === item.answer) cls = "correct";
+                else if (oIdx === practicePicked) cls = "wrong";
+              }
+              return `<button class="quiz-opt ${cls}" data-po="${oIdx}">${String.fromCharCode(65 + oIdx)}. ${opt}</button>`;
+            }).join("")}
+            ${answered ? `<div class="quiz-explain" style="color:${isCorrect ? "var(--ok)" : "var(--err)"}">${isCorrect ? "✅ 答对了！" : "❌ 解析："} ${item.explain}</div>` : ""}
+          </div>
+          <div class="nav-footer">
+            <button class="btn-secondary" id="reshuffleBtn">重新洗牌</button>
+            <button class="btn-primary" id="nextPracticeBtn">下一题 →</button>
+          </div>
+        </div>
+      `;
+
+      box.querySelectorAll("[data-po]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          practicePicked = Number(btn.dataset.po);
+          renderPractice();
+        });
+      });
+
+      document.getElementById("reshuffleBtn").addEventListener("click", initPractice);
+      document.getElementById("nextPracticeBtn").addEventListener("click", () => {
+        practiceIdx = (practiceIdx + 1) % practiceQueue.length;
+        practicePicked = null;
+        renderPractice();
+      });
+    }
+
+    function renderCheat() {
+      const box = document.getElementById("viewCheat");
+      box.innerHTML = `
+        <div class="hero-card">
+          <div style="font-size:16px;font-weight:800;">📖 英语全语法万能公式速查</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px;">手机随时打开复习，点击卡片可跳回对应关卡练习。</div>
+        </div>
+        ${allStages.map(s => `
+          <div class="section-box" style="padding:13px 14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+              <div style="font-size:14px;font-weight:700;">${s.id} · ${s.title}</div>
+              <button class="pill-btn" data-jump="${s.id}">去练这关 →</button>
+            </div>
+            <div class="formula-box" style="margin:8px 0 0;font-size:13px;">${s.formula}</div>
+          </div>
+        `).join("")}
+      `;
+
+      box.querySelectorAll("[data-jump]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          switchTab("map");
+          openDetail(btn.dataset.jump);
+        });
+      });
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll(".nav-tab").forEach(b => {
+        b.classList.toggle("active", b.dataset.tab === tab);
+      });
+      document.getElementById("viewMap").classList.toggle("hidden", tab !== "map");
+      document.getElementById("viewDetail").classList.add("hidden");
+      document.getElementById("viewPractice").classList.toggle("hidden", tab !== "practice");
+      document.getElementById("viewCheat").classList.toggle("hidden", tab !== "cheat");
+
+      if (tab === "map") renderMap();
+      if (tab === "practice" && !practiceQueue.length) initPractice();
+      if (tab === "cheat") renderCheat();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll(".nav-tab").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    document.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        currentFilter = chip.dataset.filter;
+        document.querySelectorAll(".filter-chip").forEach(c => c.classList.toggle("active", c === chip));
+        renderMap();
+      });
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (!confirm("确定要清空所有通关记录吗？")) return;
+      completed.clear();
+      quizAnswers = {};
+      saveProgress();
+      if (activeStageId) renderDetail();
+      else renderMap();
+    });
+
+    renderMap();
+  </script>
+</body>
+</html>
