@@ -716,6 +716,47 @@
     .hidden {
       display: none !important;
     }
+
+    /* 可点击查词的英文单词 */
+    .word-tap {
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 0 1px;
+      transition: background 0.12s ease;
+    }
+
+    .word-tap:hover, .word-tap.word-active {
+      background: rgba(245, 158, 11, 0.28);
+      text-decoration: underline;
+      text-decoration-color: #f59e0b;
+      text-underline-offset: 3px;
+    }
+
+    /* 全局底部点词查词浮窗 */
+    .word-dock {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: calc(68px + env(safe-area-inset-bottom));
+      z-index: 45;
+      max-width: 756px;
+      margin: 0 auto;
+      background: var(--card);
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      animation: popUp 0.14s ease-out;
+    }
+
+    @keyframes popUp {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -761,6 +802,9 @@
     <section id="viewPractice" class="hidden"></section>
   </main>
 
+  <!-- 全局点词查词浮窗 -->
+  <div id="wordDock" class="word-dock hidden" role="dialog" aria-live="polite"></div>
+
   <nav class="bottom-nav">
     <div class="bottom-nav-inner">
       <button class="nav-tab active" data-tab="map">
@@ -778,6 +822,7 @@
     </div>
   </nav>
 
+  <script src="./dict.js"></script>
   <script src="./data-1.js"></script>
   <script src="./data-2.js"></script>
   <script src="./data-3.js"></script>

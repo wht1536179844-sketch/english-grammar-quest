@@ -1,5 +1,6 @@
 (function () {
   const PARTS = window.CET4_PARTS || [];
+  const DICT = window.CET4_DICT || {};
   const allStages = PARTS.flatMap(p => p.stages.map(s => ({ ...s, partName: p.name })));
   const allLabs = allStages.flatMap(s =>
     s.labs.map((lab, i) => ({ ...lab, stageId: s.id, stageTitle: s.title, key: `${s.id}-lab-${i}` }))
@@ -47,6 +48,78 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  function lookupWord(raw) {
+    const clean = String(raw || "").replace(/’/g, "'").toLowerCase().trim();
+    if (!clean) return "";
+    if (DICT[clean]) return DICT[clean];
+    if (clean.endsWith("'s") && DICT[clean.slice(0, -2)]) {
+      return DICT[clean.slice(0, -2)] + "（……的）";
+    }
+    if (clean.includes("-")) {
+      const parts = clean.split("-").map(p => DICT[p]).filter(Boolean);
+      if (parts.length) return parts.join(" + ");
+    }
+    return "（暂无收录，点击下方整句中文查看）";
+  }
+
+  function renderClickableWords(text, chunkZh, roleLabel) {
+    const str = String(text || "");
+    const re = /([A-Za-z]+(?:[-'’][A-Za-z]+)*)/g;
+    let out = "";
+    let last = 0;
+    let m;
+    while ((m = re.exec(str)) !== null) {
+      if (m.index > last) out += escapeHtml(str.slice(last, m.index));
+      const word = m[1];
+      const norm = word.replace(/’/g, "'").toLowerCase();
+      const extra = chunkZh
+        ? ` data-chunk-zh="${escapeHtml(chunkZh)}" data-chunk-role="${escapeHtml(roleLabel || "")}"`
+        : "";
+      out += `<span class="word-tap" data-word="${escapeHtml(norm)}" data-raw="${escapeHtml(word)}"${extra}>${escapeHtml(word)}</span>`;
+      last = re.lastIndex;
+    }
+    if (last < str.length) out += escapeHtml(str.slice(last));
+    return out;
+  }
+
+  function showWordDock(raw, norm, chunkZh, chunkRole) {
+    const dock = document.getElementById("wordDock");
+    if (!dock) return;
+    const meaning = lookupWord(norm || raw);
+    dock.innerHTML = `
+      <div style="min-width:0;flex:1;">
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:17px;font-weight:800;">${escapeHtml(raw)}</span>
+          <span style="font-size:14px;font-weight:700;color:var(--primary);">${escapeHtml(meaning)}</span>
+        </div>
+        ${chunkZh ? `
+          <div style="font-size:12px;color:var(--muted);margin-top:3px;">
+            所在词块：${escapeHtml(chunkZh)} ${chunkRole ? `[${escapeHtml(chunkRole)}]` : ""}
+          </div>
+        ` : ""}
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+        <button id="dockSpeakBtn" class="speak-btn" aria-label="朗读单词">🔊</button>
+        <button id="dockCloseBtn" class="pill-btn" style="min-height:34px;padding:4px 10px;">✕</button>
+      </div>
+    `;
+    dock.classList.remove("hidden");
+    document.getElementById("dockSpeakBtn").addEventListener("click", e => {
+      e.stopPropagation();
+      speak(raw);
+    });
+    document.getElementById("dockCloseBtn").addEventListener("click", e => {
+      e.stopPropagation();
+      hideWordDock();
+    });
+  }
+
+  function hideWordDock() {
+    const dock = document.getElementById("wordDock");
+    if (dock) dock.classList.add("hidden");
+    document.querySelectorAll(".word-tap.word-active").forEach(el => el.classList.remove("word-active"));
   }
 
   function speak(text) {
@@ -124,16 +197,15 @@
         const roleTag = seg.tag ? `<span class="seg-tag">[${escapeHtml(seg.tag)}]</span>` : "";
         return `
           <span class="bi-chunk ${isPicked}" data-seg="${idx}" data-lab="${labKey}">
-            <span class="bi-en ${cls}">${roleTag}${escapeHtml(seg.t)}</span>
+            <span class="bi-en ${cls}">${roleTag}${renderClickableWords(seg.t, seg.zh, getRoleLabel(seg))}</span>
             <span class="bi-zh">${escapeHtml(seg.zh || "")}</span>
           </span>
         `;
       }).join("")}</div>`;
     }
 
-    // 正常连贯阅读模式：可点任意词块，也可点整句空白直接展开中文
+    // 正常连贯阅读模式：可点任意单词查词，也可点空白处看整句中文
     return lab.segments.map((seg, idx) => {
-      const txt = escapeHtml(seg.t);
       const isPicked = mode.pickedSeg === idx ? "seg-picked" : "";
       let cls = "chunk-span";
       if (mode.trunk && (seg.k === "subj" || seg.k === "verb" || seg.k === "obj")) {
@@ -144,7 +216,7 @@
       const tag = (mode.mod && seg.k === "mod" && seg.tag)
         ? `<span class="seg-tag">[${escapeHtml(seg.tag)}]</span>`
         : "";
-      return `<span class="${cls} ${isPicked}" data-seg="${idx}" data-lab="${labKey}">${tag}${txt}</span>`;
+      return `<span class="${cls} ${isPicked}" data-seg="${idx}" data-lab="${labKey}">${tag}${renderClickableWords(seg.t, seg.zh, getRoleLabel(seg))}</span>`;
     }).join(" ");
   }
 
@@ -378,14 +450,15 @@
         <p style="margin:10px 0 0;font-size:14px;">${escapeHtml(stage.summary)}</p>
 
         <div class="evo-box">
-          <div style="font-size:13px;font-weight:800;margin-bottom:8px;">🌱 看句子是怎么一步步“长”成四级长难句的：</div>
+          <div style="font-size:13px;font-weight:800;margin-bottom:2px;">🌱 看句子是怎么一步步“长”成四级长难句的：</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;">👆 点击句子里的任意英文单词，就能立刻看到它的中文意思和发音！</div>
           ${stage.evolution.map(ev => `
             <div class="evo-step">
               <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;">
                 <span class="evo-label">${escapeHtml(ev.label)}</span>
                 <button class="speak-btn" style="min-width:28px;min-height:28px;font-size:12px;" data-speak-raw="${escapeHtml(ev.en)}">🔊</button>
               </div>
-              <div style="font-size:13.5px;font-weight:700;margin-top:4px;">${escapeHtml(ev.en)}</div>
+              <div style="font-size:14px;font-weight:700;margin-top:5px;line-height:1.75;">${renderClickableWords(ev.en)}</div>
               <div style="font-size:12.5px;color:var(--muted);margin-top:2px;">${escapeHtml(ev.zh)}</div>
             </div>
           `).join("")}
@@ -442,7 +515,7 @@
           return `
             <div class="quiz-card">
               <span class="quiz-type-badge">[第 ${qIdx + 1} 题 · ${escapeHtml(q.type)}]</span>
-              <div class="quiz-q">${escapeHtml(q.q).replace(/\n/g, "<br>")}</div>
+              <div class="quiz-q">${renderClickableWords(q.q).replace(/\n/g, "<br>")}</div>
               ${q.options.map((opt, oIdx) => {
                 let cls = "";
                 if (answered) {
@@ -654,7 +727,7 @@
         </div>
         <div class="quiz-card">
           <span class="quiz-type-badge">[${escapeHtml(item.type)}]</span>
-          <div class="quiz-q">${escapeHtml(item.q).replace(/\n/g, "<br>")}</div>
+          <div class="quiz-q">${renderClickableWords(item.q).replace(/\n/g, "<br>")}</div>
           ${item.options.map((opt, oIdx) => {
             let cls = "";
             if (answered) {
@@ -739,6 +812,28 @@
     if (activeStageId) renderDetail();
     else renderMap();
   });
+
+  // 全局点击任意英文单词即查中文意思（捕获阶段优先处理，避免与重绘冲突）
+  document.addEventListener("click", e => {
+    if (e.target.closest("#wordDock")) return;
+
+    const wordEl = e.target.closest(".word-tap");
+    if (wordEl) {
+      if (wordEl.closest(".quiz-opt")) return;
+      e.stopPropagation();
+      document.querySelectorAll(".word-tap.word-active").forEach(el => el.classList.remove("word-active"));
+      wordEl.classList.add("word-active");
+
+      const raw = wordEl.dataset.raw || wordEl.textContent;
+      const norm = wordEl.dataset.word || raw;
+      const chunkZh = wordEl.dataset.chunkZh || "";
+      const chunkRole = wordEl.dataset.chunkRole || "";
+      showWordDock(raw, norm, chunkZh, chunkRole);
+      return;
+    }
+
+    hideWordDock();
+  }, true);
 
   renderMap();
 })();
